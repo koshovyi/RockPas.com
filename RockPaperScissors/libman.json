@@ -1,0 +1,10 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "clipboard.js@2.0.6",
+      "destination": "wwwroot/lib/clipboard.js/"
+    }
+  ]
+}

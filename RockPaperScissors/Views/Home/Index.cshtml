@@ -1,0 +1,99 @@
+﻿@model RockPaperScissors.Models.GameNewVm
+@{
+	ViewData["Title"] = "New Game";
+	ViewData["OG"] = true;
+	ViewData["OG_Title"] = "Rock Paper Scissors battle online!";
+	ViewData["OG_Description"] = "";
+}
+
+<div class="row">
+	<div class="col-lg-12">
+		<p>
+			<b>Rock paper scissors</b> (also known by other orderings of the three items, with "<b>rock</b>" sometimes being called "<b>stone</b>", roshambo or ro-sham-bo) is a hand game usually played between two people, in which each player simultaneously forms one of three shapes with an outstretched hand. These shapes are "rock" (a closed fist), "paper" (a flat hand), and "scissors" (a fist with the index finger and middle finger extended, forming a V). "Scissors" is identical to the two-fingered V sign (also indicating "victory" or "peace") except that it is pointed horizontally instead of being held upright in the air.
+		</p>
+		<p> A simultaneous, zero-sum game, it has only two possible outcomes: a draw, or a win for one player and a loss for the other. A player who decides to play rock will beat another player who has chosen scissors ("rock crushes scissors" or sometimes "blunts scissors"), but will lose to one who has played paper ("paper covers rock"); a play of paper will lose to a play of scissors ("scissors cuts paper"). If both players choose the same shape, the game is tied and is usually immediately replayed to break the tie. The type of game originated in China and spread with increased contact with East Asia, while developing different variants in signs over time.</p>
+	</div>
+</div>
+
+<hr />
+<br />
+<h2>Only two steps:</h2>
+<br />
+<br />
+
+@using (Html.BeginForm("Index", "Game", FormMethod.Post))
+{
+	@*Fighter*@
+	<h3 class="mb-3">Step 1 - Choose your fighter:</h3>
+	<div class="row">
+		<div class="col-4">
+			<input type="radio" id="radRock" name="Hand" value="1" class="rps-fighter" @Html.Raw(Model.Hand == RockPaperScissors.Services.Games.Enums.RPS.ROCK ? "checked" : "") />
+			<label class="rps-fighter-label" for="radRock">
+				Rock
+				<img src="~/media/rock_top.jpg" class="rps-fighter-img" />
+			</label>
+		</div>
+		<div class="col-4">
+			<input type="radio" id="radPaper" name="Hand" value="2" class="rps-fighter" @Html.Raw(Model.Hand == RockPaperScissors.Services.Games.Enums.RPS.PAPER ? "checked" : "") />
+			<label class="rps-fighter-label" for="radPaper">
+				Paper
+				<img src="~/media/paper_top.jpg" class="rps-fighter-img" />
+			</label>
+		</div>
+		<div class="col-4">
+			<input type="radio" id="radScissors" name="Hand" value="3" class="rps-fighter" @Html.Raw(Model.Hand == RockPaperScissors.Services.Games.Enums.RPS.SCISSORS ? "checked" : "") />
+			<label class="rps-fighter-label" for="radScissors">
+				Scissors
+				<img src="~/media/scissors_top.jpg" class="rps-fighter-img" />
+			</label>
+		</div>
+	</div>
+	<br />
+	<br />
+
+	@*Battle information*@
+	<h3 class="mb-3">Step 2 - Battle info:</h3>
+	<fieldset>
+		<div class="form-group">
+			<label for="NameAuthor">Your name <span class="text-danger">*</span>:</label>
+			@Html.TextBoxFor(t => t.NameAuthor, new { @class = "form-control", placeholder = "Enter your name", aria_describedby = "authorName" })
+			@Html.ValidationMessageFor(t => t.NameAuthor)
+			<small id="authorName" class="form-text text-muted">What is your superhero name?</small>
+		</div>
+		<div class="form-group">
+			<label for="NameAuthor">Your opponent <span class="text-danger">*</span>:</label>
+			@Html.TextBoxFor(t => t.NameOpponent, new { @class = "form-control", placeholder = "Enter your opponent's name", aria_describedby = "opponentName" })
+			@Html.ValidationMessageFor(t => t.NameOpponent)
+			<small id="opponentName" class="form-text text-muted">What is your opponent's name?</small>
+		</div>
+		<div class="form-group">
+			@Html.LabelFor(l => l.Memo, "Message to your opponent (optionaly):")
+			@Html.TextAreaFor(t => t.Memo, new { @class = "form-control", rows = 3 })
+		</div>
+		<div class="form-group">
+			@Html.LabelFor(l => l.Trophy, "Trophy (optionaly):")
+			@Html.TextBoxFor(t => t.Trophy, new { @class = "form-control", placeholder = "Trophy", aria_describedby = "Trophy" })
+		</div>
+		<div class="form-group">
+			<div class="g-recaptcha" data-sitekey="@Model.GoogleRecaptchaApiKey" data-callback="CheckRecaptcha">
+			</div>
+		</div>
+		<button id="SubmitButton" type="submit" class="btn btn-danger" disabled>Generate Game link!</button>
+		<button type="reset" class="btn btn-secondary">Reset</button>
+	</fieldset>
+
+	@Html.AntiForgeryToken()
+}
+
+<br />
+
+@section Scripts{
+	<partial name="~/Views/Shared/_ValidationScriptsPartial.cshtml" />
+	<script src='https://www.google.com/recaptcha/api.js'></script>
+	<script>
+		function CheckRecaptcha() {
+			$('#SubmitButton').removeAttr('disabled');
+			$('#SubmitButton').removeClass('disabled');
+		}
+	</script>
+}

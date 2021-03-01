@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AspNetCoreHostingModel>OutOfProcess</AspNetCoreHostingModel>
+    <UserSecretsId>1ab72dd2-002d-4db1-bad3-7b570e82cbc1</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="wwwroot\NewFolder\**" />
+    <Content Remove="wwwroot\NewFolder\**" />
+    <EmbeddedResource Remove="wwwroot\NewFolder\**" />
+    <None Remove="wwwroot\NewFolder\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="bundleconfig.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="bundleconfig.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="bundleconfig.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.10" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.9" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RockPaperScissors.Common\RockPaperScissors.Common.csproj" />
+    <ProjectReference Include="..\RockPaperScissors.Domain\RockPaperScissors.Database.csproj" />
+    <ProjectReference Include="..\RockPaperScissors.Services.Common\RockPaperScissors.Services.Common.csproj" />
+    <ProjectReference Include="..\RockPaperScissors.Services.Games\RockPaperScissors.Services.Games.csproj" />
+    <ProjectReference Include="..\RockPaperScissors.Services.Profiles\RockPaperScissors.Services.Profiles.csproj" />
+    <ProjectReference Include="..\RockPaperScissors.Services.Support\RockPaperScissors.Services.Support.csproj" />
+  </ItemGroup>
+
+</Project>

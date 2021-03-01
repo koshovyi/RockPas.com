@@ -1,0 +1,187 @@
+﻿@model RockPaperScissors.Models.GameViewVm
+@{
+	ViewData["Title"] = "Rock Paper Scissors battle: " + Model.NameAuthor + " vs " + Model.NameOpponent;
+	ViewData["OG"] = true;
+	ViewData["OG_Title"] = "Rock Paper Scissors battle: " + Model.NameAuthor + " vs " + Model.NameOpponent;
+	ViewData["OG_Description"] = Model.Memo;
+}
+
+<br />
+
+<div class="jumbotron">
+
+	@*No result*@
+	@if (Model.Result == RockPaperScissors.Services.Games.Enums.Result.UNKNOWN)
+	{
+		<h1 class="display-3 text-center">@Model.NameAuthor VS @Model.NameOpponent</h1>
+		@if (!string.IsNullOrEmpty(Model.Memo))
+		{
+			<br />
+			<p class="lead">@Model.Memo</p>
+		}
+		@if (!string.IsNullOrEmpty(Model.Trophy))
+		{
+			<p>🏆 @Model.Trophy</p>
+		}
+
+		@if (Model.IsAuthor)
+		{
+			<div class="row">
+				<div class="col-lg-12">
+					<p class="text-center">
+						Waiting opponent<br /><br />
+						<img src="~/media/loading.gif" />
+					</p>
+				</div>
+			</div>
+		}
+	}
+
+	@*Result*@
+	@if (Model.Result != RockPaperScissors.Services.Games.Enums.Result.UNKNOWN)
+	{
+		@switch (Model.Result)
+		{
+			case RockPaperScissors.Services.Games.Enums.Result.DRAW:
+				<h1 class="text-center text-danger display-3">Draw!</h1>
+				break;
+			case RockPaperScissors.Services.Games.Enums.Result.AUTHOR_WIN:
+				<h1 class="text-center text-danger display-3">@Model.NameAuthor won!</h1>
+				break;
+			case RockPaperScissors.Services.Games.Enums.Result.OPPONENT_WIN:
+				<h1 class="text-center text-danger display-3">@Model.NameOpponent won!</h1>
+				break;
+		}
+
+		@if (!string.IsNullOrEmpty(Model.Trophy))
+		{
+			<p class="text-center">🏆 @Model.Trophy</p>
+		}
+
+		<br />
+		<h1 class="text-center"><a href="/?prev=@Model.ID.ToString()&a=@(Model.IsAuthor ? "1" : "0")" class="text-center btn btn-danger btn-lg">Revenge</a></h1>
+	}
+</div>
+
+<alert-tempdata />
+
+@*Copy and share*@
+@if ((Model.IsAuthor && Model.Result == RockPaperScissors.Services.Games.Enums.Result.UNKNOWN) || Model.Result != RockPaperScissors.Services.Games.Enums.Result.UNKNOWN)
+{
+	<div class="row">
+		<div class="col-lg-12">
+
+			<div class="form-group">
+				@if (Model.Result == RockPaperScissors.Services.Games.Enums.Result.UNKNOWN)
+				{
+					<label class="control-label">Copy game link and send to your opponent:</label>
+				}
+				else
+				{
+					<label class="control-label">Share result:</label>
+				}
+				<div class="form-group">
+					<div class="input-group mb-3">
+						<div class="input-group-prepend">
+							<span class="input-group-text"><b>Game link:</b></span>
+						</div>
+						<input id="txtCopy" type="text" class="form-control" value="https://rockpas.com/@Model.ID.ToString()" readonly="readonly">
+						<div class="input-group-append">
+							<button href="#" id="butCopy" class="btn btn-danger btn-sm" data-clipboard-target="#txtCopy">Copy!</button>
+							&nbsp;
+							<button href="#" id="butShare" class="btn btn-danger btn-sm d-none">Share</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+}
+
+@*Result*@
+@if (Model.Result != RockPaperScissors.Services.Games.Enums.Result.UNKNOWN)
+{
+	<div class="row">
+		<div class="col-lg-6 col-md-6 col-xs-6 col-sm-6 col-6">
+			<h2 class="text-center">@Model.NameAuthor</h2>
+			@switch (Model.HandAuthor)
+			{
+				case RockPaperScissors.Services.Games.Enums.RPS.ROCK:
+					<img src="~/media/rock_left.jpg" width="100%" />
+					break;
+				case RockPaperScissors.Services.Games.Enums.RPS.PAPER:
+					<img src="~/media/paper_right.jpg" width="100%" />
+					break;
+				case RockPaperScissors.Services.Games.Enums.RPS.SCISSORS:
+					<img src="~/media/scissors_right.jpg" width="100%" />
+					break;
+			}
+		</div>
+		<div class="col-lg-6 col-md-6 col-xs-6 col-sm-6 col-6">
+			<h2 class="text-center">@Model.NameOpponent</h2>
+			@switch (Model.HandOpponent)
+			{
+				case RockPaperScissors.Services.Games.Enums.RPS.ROCK:
+					<img src="~/media/rock_right.jpg" width="100%" />
+					break;
+				case RockPaperScissors.Services.Games.Enums.RPS.PAPER:
+					<img src="~/media/paper_left.jpg" width="100%" />
+					break;
+				case RockPaperScissors.Services.Games.Enums.RPS.SCISSORS:
+					<img src="~/media/scissors_left.jpg" width="100%" />
+					break;
+			}
+		</div>
+	</div>
+	<br />
+}
+
+@*Opponent*@
+@if (Model.IsOpponent && Model.Result == RockPaperScissors.Services.Games.Enums.Result.UNKNOWN)
+{
+	using (Html.BeginForm("Index", "Game", new { id = Model.ID.ToString() }, FormMethod.Post, true, new { @id = "OpponentForm" }))
+	{
+		<h3 class="mb-3">Okay, @Model.NameOpponent. Choose your fighter - Click to Attack!</h3>
+		<div class="row">
+			<div class="col-4">
+				<input type="radio" id="radRock" name="Hand" value="1" class="rps-fighter" onchange="SetHand('Rock', 1);" />
+				<label class="rps-fighter-label" for="radRock">
+					Rock
+					<img src="~/media/rock_top.jpg" class="rps-fighter-img" />
+				</label>
+			</div>
+			<div class="col-4">
+				<input type="radio" id="radPaper" name="Hand" value="2" class="rps-fighter" onchange="SetHand('Paper', 2);" />
+				<label class="rps-fighter-label" for="radPaper">
+					Paper
+					<img src="~/media/paper_top.jpg" class="rps-fighter-img" />
+				</label>
+			</div>
+			<div class="col-4">
+				<input type="radio" id="radScissors" name="Hand" value="3" class="rps-fighter" onchange="SetHand('Scissors', 3);" />
+				<label class="rps-fighter-label" for="radScissors">
+					Scissors
+					<img src="~/media/scissors_top.jpg" class="rps-fighter-img" />
+				</label>
+			</div>
+		</div>
+
+		@Html.AntiForgeryToken()
+	}
+}
+
+<br />
+
+@section Scripts{
+	<script src="~/lib/clipboard.js/clipboard.min.js"></script>
+	<script>
+		@if(Model.IsAuthor && Model.Result == RockPaperScissors.Services.Games.Enums.Result.UNKNOWN)
+		{
+			@:CheckGameResult('@Model.ID.ToString()');
+		}
+
+		InitShareButton();
+		InitClipboard();
+	</script>
+}

@@ -1,0 +1,43 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+	@*Meta Open Graphs*@
+	@if (ViewData["OG"] != null && Convert.ToBoolean(ViewData["OG"]))
+	{
+	<meta property="og:type" content="website">
+	<meta property="og:title" content="@ViewData["OG_Title"]">
+	<meta property="og:description" content="@ViewData["OG_Description"]">
+	<meta property="og:image" content="https://rockpas.com/media/rock_paper_scissors.jpg">
+	<meta property="og:site_name" content="Rock Paper Scissors online">
+	}
+
+	<title>@ViewData["Title"] - Rock Paper Scissors Online!</title>
+	<link rel="stylesheet" href="~/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="~/css/site.min.css" />
+
+	@*Global site tag (gtag.js) - Google Analytics*@
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-F3PX0C3D2W"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag() { dataLayer.push(arguments); }
+		gtag('js', new Date());
+		gtag('config', 'G-F3PX0C3D2W');
+	</script>
+</head>
+<body>
+	<partial name="_Header" />
+	<div class="container">
+		<partial name="_Title" />
+		@RenderBody()
+	</div>
+	<partial name="_Footer" />
+
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="~/js/site.js" asp-append-version="true"></script>
+	@RenderSection("Scripts", required: false)
+</body>
+</html>
